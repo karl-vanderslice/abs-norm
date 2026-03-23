@@ -2,7 +2,7 @@ SHELL := /usr/bin/env bash
 
 NIX_DEV := nix develop "path:$(CURDIR)" -c
 
-.PHONY: install update-lock dev start scrape lint test test-unit test-integration test-smoke coverage precommit-install precommit-run container-build-nix container-load-nix
+.PHONY: install update-lock dev start scrape lint test test-unit test-integration test-smoke coverage precommit-install precommit-run container-build-nix container-load-nix compose-up
 
 install:
 	$(NIX_DEV) npm ci
@@ -48,3 +48,6 @@ container-build-nix:
 
 container-load-nix:
 	docker load < result
+
+compose-up:
+	docker-compose up

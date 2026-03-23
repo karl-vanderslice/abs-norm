@@ -42,7 +42,9 @@ The server defaults to port `8042`.
 
 ## Containerization
 
-### Native Nix Container Image
+Only Nix-native container builds are supported.
+
+### Build And Run (Nix Image)
 
 Build a Nix-native OCI image tarball:
 
@@ -60,18 +62,8 @@ docker run --rm -p 8042:8042 --name abs-norm abs-norm:nix
 Compose with the prebuilt Nix image:
 
 ```bash
-docker-compose -f docker-compose.nix-image.yml up
+docker-compose up
 ```
-
-### Dockerfile + docker-compose Compatibility
-
-This repository includes a Nix-based [Dockerfile](Dockerfile) and [docker-compose.yml](docker-compose.yml):
-
-```bash
-docker-compose up --build
-```
-
-This keeps packaging Nix-driven while remaining compose-compatible.
 
 ## Environment Variables
 

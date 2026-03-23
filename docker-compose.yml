@@ -2,9 +2,6 @@ version: "3.9"
 
 services:
   abs-norm:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: abs-norm:nix
     container_name: abs-norm
     ports:
