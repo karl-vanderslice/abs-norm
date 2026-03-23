@@ -65,6 +65,10 @@ Compose with the prebuilt Nix image:
 docker-compose up
 ```
 
+Published image location:
+
+- ghcr.io/karl-vanderslice/abs-norm:latest
+
 ## Environment Variables
 
 - `PORT` (default: `8042`)
@@ -101,6 +105,41 @@ make start
 1. For direct feed ingestion (optional, recommended):
 
 - Add podcast via RSS URL: `http://<your-host>:8042/rss/norm-macdonald-live.xml`
+
+## Docker Compose: Audiobookshelf + Provider
+
+Bring up both services together:
+
+```bash
+docker-compose -f docker-compose.with-audiobookshelf.yml up
+```
+
+After startup:
+
+1. Open Audiobookshelf at `http://localhost:13378`
+1. Add custom metadata provider URL as `http://abs-norm:8042`
+1. Use RSS URL `http://abs-norm:8042/rss/norm-macdonald-live.xml` for in-network ingestion
+
+The compose network lets `audiobookshelf` resolve `abs-norm` by service name.
+
+## CI/CD And Publishing
+
+GitHub Actions workflows:
+
+- CI: [.github/workflows/ci.yml](.github/workflows/ci.yml)
+- Container publish: [.github/workflows/publish-container.yml](.github/workflows/publish-container.yml)
+
+Behavior:
+
+- CI runs lint/tests and builds the Nix app + Nix container image
+- CI uploads the built image tarball as a GitHub Actions artifact
+- Publish workflow pushes container images to GHCR on `master`/`main` and `v*` tags
+- Published tags include `latest`, `sha-<shortsha>`, and the git tag name when the event is a tag
+
+Nix infrastructure actions are pinned to current major releases from Determinate Systems:
+
+- DeterminateSystems/nix-installer-action@v21
+- DeterminateSystems/magic-nix-cache-action@v13
 
 ## Data Refresh
 

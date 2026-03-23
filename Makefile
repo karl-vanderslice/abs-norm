@@ -2,7 +2,7 @@ SHELL := /usr/bin/env bash
 
 NIX_DEV := nix develop "path:$(CURDIR)" -c
 
-.PHONY: install update-lock dev start scrape lint test test-unit test-integration test-smoke coverage precommit-install precommit-run container-build-nix container-load-nix compose-up
+.PHONY: install update-lock dev start scrape lint test test-unit test-integration test-smoke coverage precommit-install precommit-run container-build-nix container-load-nix compose-up compose-up-stack
 
 install:
 	$(NIX_DEV) npm ci
@@ -51,3 +51,6 @@ container-load-nix:
 
 compose-up:
 	docker-compose up
+
+compose-up-stack:
+	docker-compose -f docker-compose.with-audiobookshelf.yml up

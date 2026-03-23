@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   abs-norm:
-    image: abs-norm:nix
+    image: ${ABS_NORM_IMAGE:-ghcr.io/karl-vanderslice/abs-norm:latest}
     container_name: abs-norm
     ports:
       - "8042:8042"

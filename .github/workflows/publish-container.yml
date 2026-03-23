@@ -1,0 +1,77 @@
+name: Publish Container
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v21
+
+      - name: Enable Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v13
+
+      - name: Build Nix container image
+        run: nix build "path:.#containerImage"
+
+      - name: Upload publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: abs-norm-publish-image-${{ github.sha }}
+          path: result
+          if-no-files-found: error
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Load and publish image
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_REF_TYPE: ${{ github.ref_type }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          docker load < result > /tmp/loaded-image.txt
+          local_image="$(awk -F': ' '/Loaded image:/ {print $2}' /tmp/loaded-image.txt | tail -n1)"
+
+          if [ -z "$local_image" ]; then
+            echo "Unable to determine loaded image name"
+            cat /tmp/loaded-image.txt
+            exit 1
+          fi
+
+          repo_lc="$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          target_image="ghcr.io/${repo_lc}"
+
+          declare -a tags
+          tags=("sha-${GITHUB_SHA::7}")
+
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            tags+=("$GITHUB_REF_NAME")
+            tags+=("latest")
+          elif [ "$GITHUB_REF_NAME" = "master" ] || [ "$GITHUB_REF_NAME" = "main" ]; then
+            tags+=("latest")
+          fi
+
+          for tag in "${tags[@]}"; do
+            full_tag="${target_image}:${tag}"
+            echo "Publishing ${full_tag}"
+            docker tag "$local_image" "$full_tag"
+            docker push "$full_tag"
+          done
