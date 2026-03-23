@@ -1,3 +1,6 @@
 node_modules/
 coverage/
 result
+
+# Force-track repository lockfile even if globally ignored.
+!flake.lock
