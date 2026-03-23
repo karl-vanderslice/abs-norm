@@ -41,10 +41,11 @@ export function toAbsMatch(dataset) {
 
   const episodes = dataset.episodes.map((episode) => ({
     ...episode,
-    title: episode.fileTitle || episode.title,
-    displayTitle: episode.title,
-    subtitle: episode.guest || '',
+    title: episode.friendlyTitle || episode.fileTitle || episode.title,
+    displayTitle: episode.fileTitle || episode.title,
+    subtitle: episode.guest || episode.title || '',
     summary: episode.description || '',
+    publishedDate: episode.publishedDate || episode.releaseDate,
     explicit: podcast.explicit,
     image: episode.thumbnail || podcast.cover
   }));
@@ -79,25 +80,33 @@ export function toAbsMatch(dataset) {
 
 export function buildRss(dataset) {
   const podcast = dataset.podcast;
+  const toSubtitle = (value, limit = 220) => {
+    const normalized = (value || '').toString().replace(/\s+/g, ' ').trim();
+    if (!normalized) return '';
+    if (normalized.length <= limit) return normalized;
+    return `${normalized.slice(0, limit - 1).trimEnd()}…`;
+  };
+
   const items = dataset.episodes
     .map((episode) => {
       const enclosureUrl = episode.mediaUrl || episode.pageUrl;
       const enclosureType = episode.mediaUrl?.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'text/html';
       const guid = episode.guid || episode.slug;
-      const episodeTitle = episode.fileTitle || episode.title;
+      const episodeTitle = episode.friendlyTitle || episode.fileTitle || episode.title;
+      const summary = episode.description || '';
 
       return [
         '    <item>',
         `      <title>${escapeXml(episodeTitle)}</title>`,
-        `      <description>${escapeXml(episode.description || '')}</description>`,
-        `      <content:encoded><![CDATA[${(episode.description || '').replaceAll(']]>', ']]]]><![CDATA[>')}]]></content:encoded>`,
+        `      <description>${escapeXml(summary)}</description>`,
+        `      <content:encoded><![CDATA[${summary.replaceAll(']]>', ']]]]><![CDATA[>')}]]></content:encoded>`,
         `      <pubDate>${escapeXml(toRfc2822(episode.releaseDate))}</pubDate>`,
         `      <guid isPermaLink="false">${escapeXml(guid)}</guid>`,
         `      <link>${escapeXml(episode.pageUrl)}</link>`,
         `      <enclosure url="${escapeXml(enclosureUrl)}" type="${escapeXml(enclosureType)}" length="0" />`,
         `      <itunes:author>${escapeXml(podcast.author)}</itunes:author>`,
-        `      <itunes:summary>${escapeXml(episode.description || '')}</itunes:summary>`,
-        `      <itunes:subtitle>${escapeXml(episode.guest || '')}</itunes:subtitle>`,
+        `      <itunes:summary>${escapeXml(summary)}</itunes:summary>`,
+        `      <itunes:subtitle>${escapeXml(toSubtitle(summary) || episode.guest || '')}</itunes:subtitle>`,
         `      <itunes:episode>${episode.episodeNumber}</itunes:episode>`,
         `      <itunes:season>${episode.season}</itunes:season>`,
         '      <itunes:episodeType>full</itunes:episodeType>',

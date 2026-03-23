@@ -36,6 +36,7 @@ describe('metadata helpers', () => {
     expect(match.itunesId).toBeTruthy();
     expect(match.mediaType).toBe('podcast');
     expect(match.episodes).toHaveLength(39);
+    expect(match.episodes[0].title).toMatch(/^S1\.E1/);
   });
 
   it('builds RSS including all 39 items', () => {
@@ -45,6 +46,7 @@ describe('metadata helpers', () => {
     expect(rss).toContain('<itunes:type>episodic</itunes:type>');
     expect(rss).toContain('<image>');
     expect(rss).toContain('<content:encoded><![CDATA[');
+    expect(rss).toContain('S1.E1');
     expect(rss).toContain('<title>Norm Macdonald Live</title>');
   });
 });

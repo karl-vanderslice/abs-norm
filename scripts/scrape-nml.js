@@ -58,6 +58,57 @@ function buildDefaultFileTitle(season, episodeNumber, guest) {
   return `Norm Macdonald Live - S${pad2(season)}E${pad2(episodeNumber)} - Norm Macdonald with Guest ${normalizeGuestForFileTitle(guest)}`;
 }
 
+function normalizeGuestForFriendlyTitle(guest) {
+  const map = new Map([
+    ['Bob Einstein (Super Dave Osborne)', 'Super Dave'],
+    ['Gilbert Gottfried (Part 1)', 'Gilbert Gottfried Pt. 1'],
+    ['Gilbert Gottfried (Part 2)', 'Gilbert Gottfried Pt. 2'],
+    ['Todd Glass (Part 1)', 'Todd Glass Pt. 1'],
+    ['Todd Glass (Part 2)', 'Todd Glass Pt. 2'],
+    ['Sarah Silverman (Part 1)', 'Sarah Silverman Pt. 1'],
+    ['Sarah Silverman (Part 2)', 'Sarah Silverman Pt. 2']
+  ]);
+
+  if (map.has(guest)) return map.get(guest);
+
+  return cleanText(guest)
+    .replace(/\s+[\u2013-]\s+Part\s+(\d+)/gi, ' Pt. $1')
+    .replace(/\s*\(Part\s*(\d+)\)/gi, ' Pt. $1')
+    .replace(/\s*\(Pt\.?\s*(\d+)\)/gi, ' Pt. $1');
+}
+
+function buildFriendlyTitle(season, episodeNumber, guest) {
+  return `S${season}.E${episodeNumber} · ${normalizeGuestForFriendlyTitle(guest)}`;
+}
+
+function buildFriendlyDescription(episode, fallback = '') {
+  const guest = normalizeGuestForFriendlyTitle(episode.guest || episode.title || 'Guest');
+  const season = episode.season;
+  const episodeNumber = episode.episodeNumber;
+
+  if (season === 1 && episodeNumber === 1) {
+    return `The premiere episode of Norm Macdonald Live, with guest ${guest}.`;
+  }
+  if (/Pt\.\s*1$/i.test(guest)) {
+    const baseGuest = guest.replace(/\s+Pt\.\s*1$/i, '');
+    return `The first part of Norm Macdonald's sit down with ${baseGuest}.`;
+  }
+  if (/Pt\.\s*2$/i.test(guest)) {
+    const baseGuest = guest.replace(/\s+Pt\.\s*2$/i, '');
+    return `The second part of Norm Macdonald's sit down with ${baseGuest}.`;
+  }
+  if (season === 1) {
+    return `Norm Macdonald and Adam Eget welcome ${guest} to the show.`;
+  }
+
+  const maybeSource = cleanText(fallback);
+  if (maybeSource && maybeSource.length >= 45) {
+    return maybeSource;
+  }
+
+  return `${guest} joins Norm on Season ${season} of Norm Macdonald Live.`;
+}
+
 function isVideoFilename(filename) {
   return /\.(mp4|m4v|mov|mkv|avi|webm|ogv)$/i.test(filename);
 }
@@ -324,9 +375,10 @@ async function main() {
       }
     }
 
-    if ((!episode.description || episode.description.length < 20) && episode.guest) {
-      episode.description = `Norm Macdonald interviews ${episode.guest} in season ${episode.season}, episode ${episode.episodeNumber}.`;
-    }
+    const archiveDescription = cleanText(episode.description);
+    episode.description = buildFriendlyDescription(episode, imdbMetadata?.description || archiveDescription);
+    episode.friendlyTitle = buildFriendlyTitle(episode.season, episode.episodeNumber, episode.guest);
+    episode.publishedDate = episode.releaseDate;
 
     episode.fileTitle = localFile?.fileTitle || buildDefaultFileTitle(episode.season, episode.episodeNumber, episode.guest);
     if (localFile?.fileName) {
