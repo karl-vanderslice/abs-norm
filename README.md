@@ -111,7 +111,7 @@ make start
 Bring up both services together:
 
 ```bash
-docker-compose -f docker-compose.with-audiobookshelf.yml up
+ABS_NORM_PUBLIC_BASE_URL=http://abs-norm:8042 docker-compose --profile stack up
 ```
 
 After startup:
@@ -121,6 +121,8 @@ After startup:
 1. Use RSS URL `http://abs-norm:8042/rss/norm-macdonald-live.xml` for in-network ingestion
 
 The compose network lets `audiobookshelf` resolve `abs-norm` by service name.
+
+This is implemented with a single [docker-compose.yml](docker-compose.yml) using Compose profiles (no second compose file needed).
 
 ## CI/CD And Publishing
 

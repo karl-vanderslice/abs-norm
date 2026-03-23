@@ -53,4 +53,4 @@ compose-up:
 	docker-compose up
 
 compose-up-stack:
-	docker-compose -f docker-compose.with-audiobookshelf.yml up
+	docker-compose --profile stack up

@@ -8,5 +8,20 @@ services:
       - "8042:8042"
     environment:
       PORT: "8042"
-      PUBLIC_BASE_URL: "http://localhost:8042"
+      PUBLIC_BASE_URL: ${ABS_NORM_PUBLIC_BASE_URL:-http://localhost:8042}
+    restart: unless-stopped
+
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    profiles:
+      - stack
+    depends_on:
+      - abs-norm
+    ports:
+      - "13378:80"
+    volumes:
+      - ./audiobookshelf/config:/config
+      - ./audiobookshelf/metadata:/metadata
+      - ./audiobookshelf/podcasts:/podcasts
     restart: unless-stopped
