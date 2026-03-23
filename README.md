@@ -32,14 +32,55 @@ curl http://localhost:8042/healthz
 
 ## Use With Audiobookshelf
 
-1. Start this service.
-2. In Audiobookshelf, go to Server Settings -> Metadata Tools -> Custom Metadata Providers.
-3. Add `http://<your-host>:8042` as a provider for media type `podcast`.
-4. Match metadata on your Norm Macdonald Live podcast item.
+### 1) Start abs-norm and verify reachability
 
-Optional direct feed import URL:
+Start this service and confirm Audiobookshelf can reach it:
 
-`http://<your-host>:8042/rss/norm-macdonald-live.xml`
+```bash
+curl http://<abs-norm-host>:8042/healthz
+```
+
+Expected response:
+
+```json
+{"ok":true}
+```
+
+### 2) Add as a custom metadata provider
+
+In Audiobookshelf:
+
+1. Go to Server Settings -> Metadata Tools -> Custom Metadata Providers.
+2. Add provider base URL: `http://<abs-norm-host>:8042`
+3. Set media type to `podcast`.
+4. Save.
+
+abs-norm implements the custom provider search endpoint at:
+
+`GET /search`
+
+### 3) Use the provider on a podcast item
+
+1. Open your podcast item in Audiobookshelf.
+2. Open the metadata/match dialog for that item.
+3. Select your custom provider.
+4. Search for `Norm Macdonald Live` (or use Quick Match).
+5. Apply the match.
+
+The provider returns podcast-level metadata plus episode metadata (description, image, season/episode info, and related fields).
+
+### 4) (Optional) Import as RSS feed directly
+
+If you want feed-based import instead of matching through metadata provider, use:
+
+`http://<abs-norm-host>:8042/rss/norm-macdonald-live.xml`
+
+### Troubleshooting
+
+- If Audiobookshelf logs show `ssrf-req-filter` blocked calls to private/container IPs, whitelist the provider host in Audiobookshelf:
+	- `SSRF_REQUEST_FILTER_WHITELIST=<abs-norm-hostname>`
+- If metadata match shows no results, verify query term includes `Norm Macdonald Live` and that ABS can resolve/reach `<abs-norm-host>`.
+- Ensure `PUBLIC_BASE_URL` is set correctly for your deployment so feed URLs are emitted with the correct host.
 
 ## Docker Compose
 
