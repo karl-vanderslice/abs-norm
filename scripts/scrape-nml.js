@@ -10,6 +10,7 @@ const OUTPUT_PATH = path.join(ROOT, 'data', 'norm-macdonald-live.json');
 
 const ARCHIVE_BASE = 'https://normmacdonaldarchive.com';
 const LIST_URL = `${ARCHIVE_BASE}/nml`;
+const ARCHIVE_DOWNLOAD_BASE = 'https://archive.org/download/Norm_Macdonald_Live';
 const WIKIPEDIA_WIKITEXT_URL = 'https://en.wikipedia.org/w/api.php?action=parse&page=Norm_Macdonald_Live&prop=wikitext&format=json';
 
 const LEGACY_ITUNES_ID = process.env.LEGACY_ITUNES_ID || '625135046';
@@ -107,6 +108,11 @@ function buildFriendlyDescription(episode, fallback = '') {
   }
 
   return `${guest} joins Norm on Season ${season} of Norm Macdonald Live.`;
+}
+
+function buildArchiveDownloadUrl(fileName) {
+  if (!fileName) return '';
+  return `${ARCHIVE_DOWNLOAD_BASE}/${encodeURIComponent(fileName)}`;
 }
 
 function isVideoFilename(filename) {
@@ -321,6 +327,7 @@ function parseEpisodePage(slug, html, coverFallback) {
     description,
     pageUrl,
     mediaUrl: watchUrl,
+    embedUrl: watchUrl,
     thumbnail: thumbnail || coverFallback,
     tags: [`season-${season}`, 'norm-macdonald-live', guest]
   };
@@ -384,6 +391,8 @@ async function main() {
     if (localFile?.fileName) {
       episode.localFileName = localFile.fileName;
     }
+    const archiveFileName = episode.localFileName || `${episode.fileTitle}.mp4`;
+    episode.mediaUrl = buildArchiveDownloadUrl(archiveFileName);
 
     episodes.push(episode);
   }
