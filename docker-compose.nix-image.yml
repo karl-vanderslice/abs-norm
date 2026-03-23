@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  abs-norm:
+    image: abs-norm:nix
+    container_name: abs-norm
+    ports:
+      - "8042:8042"
+    environment:
+      PORT: "8042"
+      PUBLIC_BASE_URL: "http://localhost:8042"
+    restart: unless-stopped

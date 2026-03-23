@@ -1,0 +1,22 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: abs-norm-lint
+        name: abs-norm lint
+        entry: nix develop "path:." -c npm run lint
+        language: system
+        pass_filenames: false
+
+      - id: abs-norm-test
+        name: abs-norm tests
+        entry: nix develop "path:." -c npm test
+        language: system
+        pass_filenames: false

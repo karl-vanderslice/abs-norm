@@ -30,6 +30,8 @@ Custom Audiobookshelf metadata provider for **Norm Macdonald Live**, using a rep
 
 ## Nix + Make Workflow
 
+All `npm` / `npx` operations are expected to run inside `nix develop` (via `make` targets).
+
 ```bash
 make install
 make scrape
@@ -37,6 +39,39 @@ make dev
 ```
 
 The server defaults to port `8042`.
+
+## Containerization
+
+### Native Nix Container Image
+
+Build a Nix-native OCI image tarball:
+
+```bash
+nix build .#containerImage
+```
+
+Load into Docker and run:
+
+```bash
+docker load < result
+docker run --rm -p 8042:8042 --name abs-norm abs-norm:nix
+```
+
+Compose with the prebuilt Nix image:
+
+```bash
+docker-compose -f docker-compose.nix-image.yml up
+```
+
+### Dockerfile + docker-compose Compatibility
+
+This repository includes a Nix-based [Dockerfile](Dockerfile) and [docker-compose.yml](docker-compose.yml):
+
+```bash
+docker-compose up --build
+```
+
+This keeps packaging Nix-driven while remaining compose-compatible.
 
 ## Environment Variables
 
@@ -84,6 +119,43 @@ make scrape
 ```
 
 This rewrites `data/norm-macdonald-live.json` from the current archive site.
+
+## Pre-commit
+
+Install git hooks:
+
+```bash
+make precommit-install
+```
+
+Run hooks manually:
+
+```bash
+make precommit-run
+```
+
+The pre-commit pipeline runs lint + full tests inside `nix develop`.
+
+## Nix-native npm/npx Usage
+
+- Install deps reproducibly: `make install` (`npm ci` inside `nix develop`)
+- Update lockfile intentionally: `make update-lock` (`npm install` inside `nix develop`)
+- Run scripts with local binaries via npm (npx-equivalent resolution) inside Nix shell through make targets.
+
+## Test Suite
+
+Run all tests:
+
+```bash
+make test
+```
+
+Breakdown:
+
+- Unit tests: `make test-unit`
+- Integration tests (HTTP route behavior): `make test-integration`
+- Smoke test (real process + curl/jq endpoint validation): `make test-smoke`
+- Coverage: `make coverage`
 
 ## Notes
 
