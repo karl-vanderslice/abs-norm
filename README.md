@@ -94,9 +94,3 @@ Other useful targets:
 - `make test-integration`
 - `make test-smoke`
 - `make coverage`
-
-## Notes For Self-Hosting
-
-- Intended for private networks and trusted environments.
-- If you publish this beyond your LAN, put it behind your normal reverse proxy and access controls.
-- The upstream catalog source can change over time, so refresh with `make scrape` when needed.
