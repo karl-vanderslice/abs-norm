@@ -41,6 +41,8 @@ export function toAbsMatch(dataset) {
 
   const episodes = dataset.episodes.map((episode) => ({
     ...episode,
+    title: episode.fileTitle || episode.title,
+    displayTitle: episode.title,
     subtitle: episode.guest || '',
     summary: episode.description || '',
     explicit: podcast.explicit,
@@ -82,10 +84,11 @@ export function buildRss(dataset) {
       const enclosureUrl = episode.mediaUrl || episode.pageUrl;
       const enclosureType = episode.mediaUrl?.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'text/html';
       const guid = episode.guid || episode.slug;
+      const episodeTitle = episode.fileTitle || episode.title;
 
       return [
         '    <item>',
-        `      <title>${escapeXml(episode.title)}</title>`,
+        `      <title>${escapeXml(episodeTitle)}</title>`,
         `      <description>${escapeXml(episode.description || '')}</description>`,
         `      <content:encoded><![CDATA[${(episode.description || '').replaceAll(']]>', ']]]]><![CDATA[>')}]]></content:encoded>`,
         `      <pubDate>${escapeXml(toRfc2822(episode.releaseDate))}</pubDate>`,

@@ -102,6 +102,8 @@ The compose network allows Audiobookshelf to reach this service at `http://abs-n
 
 - `PORT`: listen port (default `8042`)
 - `PUBLIC_BASE_URL`: public base URL used in feed metadata (default `http://localhost:$PORT`)
+- `LOCAL_MEDIA_PATH`: optional path to local episode files for exact SxxExx title alignment (default `/mnt/media-podcasts/Norm Macdonald Live`)
+- `IMDB_TITLE_ID`: IMDb title id used for episode-page enrichment attempts (default `tt6407712`)
 - `LEGACY_ITUNES_ID`: used during scraping (default `625135046`)
 - `LEGACY_ITUNES_PAGE_URL`: used during scraping (default derived from `LEGACY_ITUNES_ID`)
 
@@ -110,6 +112,17 @@ Example:
 ```bash
 PUBLIC_BASE_URL=http://192.168.1.50:8042 make start
 ```
+
+### Scraper enrichment behavior
+
+During `make scrape`, episode metadata is merged from multiple sources:
+
+- Norm Macdonald Archive pages (primary source)
+- Wikipedia episode table (release/subject fallback)
+- IMDb episode page URL (best-effort supplement)
+- Optional local media directory (`LOCAL_MEDIA_PATH`) to align episode titles to your exact filenames
+
+If IMDb blocks requests in your environment, scraping still succeeds and falls back to archive + Wikipedia data.
 
 ## Updating The Dataset
 

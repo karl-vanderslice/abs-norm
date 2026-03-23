@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-23T14:50:28.785Z",
+  "generatedAt": "2026-03-23T18:00:47.822Z",
   "podcast": {
     "title": "Norm Macdonald Live",
     "subtitle": "The complete 39-episode run of Norm Macdonald Live",
@@ -28,7 +28,8 @@
     "feedUrl": "http://localhost:8042/rss/norm-macdonald-live.xml",
     "source": {
       "archiveList": "https://normmacdonaldarchive.com/nml",
-      "wikipedia": "https://en.wikipedia.org/wiki/Norm_Macdonald_Live"
+      "wikipedia": "https://en.wikipedia.org/wiki/Norm_Macdonald_Live",
+      "imdbEpisodes": "https://www.imdb.com/title/tt6407712/episodes/"
     }
   },
   "episodes": [
@@ -49,6 +50,8 @@
         "norm-macdonald-live",
         "Bob Einstein (Super Dave Osborne)"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E01 - Norm Macdonald with Guest Super Dave Osborne",
+      "localFileName": "Norm Macdonald Live - S01E01 - Norm Macdonald with Guest Super Dave Osborne.mp4",
       "episodeOverall": 1
     },
     {
@@ -68,6 +71,8 @@
         "norm-macdonald-live",
         "Tom Green"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E02 - Norm Macdonald with Guest Tom Green",
+      "localFileName": "Norm Macdonald Live - S01E02 - Norm Macdonald with Guest Tom Green.mp4",
       "episodeOverall": 2
     },
     {
@@ -87,6 +92,8 @@
         "norm-macdonald-live",
         "Fred Stoller"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E03 - Norm Macdonald with Guest Fred Stoller",
+      "localFileName": "Norm Macdonald Live - S01E03 - Norm Macdonald with Guest Fred Stoller.mp4",
       "episodeOverall": 3
     },
     {
@@ -106,6 +113,8 @@
         "norm-macdonald-live",
         "Russell Brand"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E04 - Norm Macdonald with Guest Russell Brand",
+      "localFileName": "Norm Macdonald Live - S01E04 - Norm Macdonald with Guest Russell Brand.mp4",
       "episodeOverall": 4
     },
     {
@@ -125,6 +134,8 @@
         "norm-macdonald-live",
         "Billy Bob Thornton"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E05 - Norm Macdonald with Guest Billy Bob Thornton",
+      "localFileName": "Norm Macdonald Live - S01E05 - Norm Macdonald with Guest Billy Bob Thornton.mp4",
       "episodeOverall": 5
     },
     {
@@ -144,6 +155,8 @@
         "norm-macdonald-live",
         "Larry King"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E06 - Norm Macdonald with Guest Larry King",
+      "localFileName": "Norm Macdonald Live - S01E06 - Norm Macdonald with Guest Larry King.mp4",
       "episodeOverall": 6
     },
     {
@@ -163,6 +176,8 @@
         "norm-macdonald-live",
         "Kevin Nealon"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E07 - Norm Macdonald with Guest Kevin Nealon",
+      "localFileName": "Norm Macdonald Live - S01E07 - Norm Macdonald with Guest Kevin Nealon.mp4",
       "episodeOverall": 7
     },
     {
@@ -182,6 +197,8 @@
         "norm-macdonald-live",
         "Simon Helberg"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E08 - Norm Macdonald with Guest Simon Helberg",
+      "localFileName": "Norm Macdonald Live - S01E08 - Norm Macdonald with Guest Simon Helberg.mp4",
       "episodeOverall": 8
     },
     {
@@ -201,6 +218,8 @@
         "norm-macdonald-live",
         "Nick Swardson"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E09 - Norm Macdonald with Guest Nick Swardson",
+      "localFileName": "Norm Macdonald Live - S01E09 - Norm Macdonald with Guest Nick Swardson.mp4",
       "episodeOverall": 9
     },
     {
@@ -220,6 +239,8 @@
         "norm-macdonald-live",
         "Andy Dick"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E10 - Norm Macdonald with Guest Andy Dick",
+      "localFileName": "Norm Macdonald Live - S01E10 - Norm Macdonald with Guest Andy Dick.mp4",
       "episodeOverall": 10
     },
     {
@@ -239,6 +260,8 @@
         "norm-macdonald-live",
         "Gilbert Gottfried (Part 1)"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E11 - Norm Macdonald with Guest Gilbert Gottfried (Pt 1)",
+      "localFileName": "Norm Macdonald Live - S01E11 - Norm Macdonald with Guest Gilbert Gottfried (Pt 1).mp4",
       "episodeOverall": 11
     },
     {
@@ -258,6 +281,8 @@
         "norm-macdonald-live",
         "Gilbert Gottfried (Part 2)"
       ],
+      "fileTitle": "Norm Macdonald Live - S01E12 - Norm Macdonald with Guest Gilbert Gottfried (Pt 2)",
+      "localFileName": "Norm Macdonald Live - S01E12 - Norm Macdonald with Guest Gilbert Gottfried (Pt 2).mp4",
       "episodeOverall": 12
     },
     {
@@ -277,6 +302,8 @@
         "norm-macdonald-live",
         "Ray Romano"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E01 - Norm Macdonald with Guest Ray Romano",
+      "localFileName": "Norm Macdonald Live - S02E01 - Norm Macdonald with Guest Ray Romano.mp4",
       "episodeOverall": 13
     },
     {
@@ -296,6 +323,8 @@
         "norm-macdonald-live",
         "Adam Sandler"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E02 - Norm Macdonald with Guest Adam Sandler",
+      "localFileName": "Norm Macdonald Live - S02E02 - Norm Macdonald with Guest Adam Sandler.mp4",
       "episodeOverall": 14
     },
     {
@@ -315,6 +344,8 @@
         "norm-macdonald-live",
         "David Spade"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E03 - Norm Macdonald with Guest David Spade",
+      "localFileName": "Norm Macdonald Live - S02E03 - Norm Macdonald with Guest David Spade.mp4",
       "episodeOverall": 15
     },
     {
@@ -334,6 +365,8 @@
         "norm-macdonald-live",
         "Carl Reiner"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E04 - Norm Macdonald with Guest Carl Reiner",
+      "localFileName": "Norm Macdonald Live - S02E04 - Norm Macdonald with Guest Carl Reiner.mp4",
       "episodeOverall": 16
     },
     {
@@ -353,6 +386,8 @@
         "norm-macdonald-live",
         "Fred Willard"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E05 - Norm Macdonald with Guest Fred Willard",
+      "localFileName": "Norm Macdonald Live - S02E05 - Norm Macdonald with Guest Fred Willard.mp4",
       "episodeOverall": 17
     },
     {
@@ -372,6 +407,8 @@
         "norm-macdonald-live",
         "Todd Glass (Part 1)"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E06 - Norm Macdonald with Guest Todd Glass (Pt 1)",
+      "localFileName": "Norm Macdonald Live - S02E06 - Norm Macdonald with Guest Todd Glass (Pt 1).mp4",
       "episodeOverall": 18
     },
     {
@@ -391,6 +428,8 @@
         "norm-macdonald-live",
         "Todd Glass (Part 2)"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E07 - Norm Macdonald with Guest Todd Glass (Pt 2)",
+      "localFileName": "Norm Macdonald Live - S02E07 - Norm Macdonald with Guest Todd Glass (Pt 2).mp4",
       "episodeOverall": 19
     },
     {
@@ -410,6 +449,8 @@
         "norm-macdonald-live",
         "Bob Saget"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E08 - Norm Macdonald with Guest Bob Saget",
+      "localFileName": "Norm Macdonald Live - S02E08 - Norm Macdonald with Guest Bob Saget.mp4",
       "episodeOverall": 20
     },
     {
@@ -429,6 +470,8 @@
         "norm-macdonald-live",
         "David Koechner"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E09 - Norm Macdonald with Guest David Koechner",
+      "localFileName": "Norm Macdonald Live - S02E09 - Norm Macdonald with Guest David Koechner.mp4",
       "episodeOverall": 21
     },
     {
@@ -448,6 +491,8 @@
         "norm-macdonald-live",
         "Roseanne Barr"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E10 - Norm Macdonald with Guest Roseanne Barr",
+      "localFileName": "Norm Macdonald Live - S02E10 - Norm Macdonald with Guest Roseanne Barr.mp4",
       "episodeOverall": 22
     },
     {
@@ -467,6 +512,8 @@
         "norm-macdonald-live",
         "Marc Maron"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E11 - Norm Macdonald with Guest Marc Maron",
+      "localFileName": "Norm Macdonald Live - S02E11 - Norm Macdonald with Guest Marc Maron.mp4",
       "episodeOverall": 23
     },
     {
@@ -486,6 +533,8 @@
         "norm-macdonald-live",
         "Martin Mull"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E12 - Norm Macdonald with Guest Martin Mull",
+      "localFileName": "Norm Macdonald Live - S02E12 - Norm Macdonald with Guest Martin Mull.mp4",
       "episodeOverall": 24
     },
     {
@@ -505,6 +554,8 @@
         "norm-macdonald-live",
         "Jack Carter"
       ],
+      "fileTitle": "Norm Macdonald Live - S02E13 - Norm Macdonald with Guest Jack Carter",
+      "localFileName": "Norm Macdonald Live - S02E13 - Norm Macdonald with Guest Jack Carter.mp4",
       "episodeOverall": 25
     },
     {
@@ -524,6 +575,8 @@
         "norm-macdonald-live",
         "Stephen Merchant"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E01 - Norm Macdonald with Guest Stephen Merchant",
+      "localFileName": "Norm Macdonald Live - S03E01 - Norm Macdonald with Guest Stephen Merchant.mp4",
       "episodeOverall": 26
     },
     {
@@ -543,6 +596,8 @@
         "norm-macdonald-live",
         "Bill Hader"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E02 - Norm Macdonald with Guest Bill Hader",
+      "localFileName": "Norm Macdonald Live - S03E02 - Norm Macdonald with Guest Bill Hader.mp4",
       "episodeOverall": 27
     },
     {
@@ -562,6 +617,8 @@
         "norm-macdonald-live",
         "David Letterman"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E03 - Norm Macdonald with Guest David Letterman",
+      "localFileName": "Norm Macdonald Live - S03E03 - Norm Macdonald with Guest David Letterman.mp4",
       "episodeOverall": 28
     },
     {
@@ -581,6 +638,8 @@
         "norm-macdonald-live",
         "Mike Tyson"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E04 - Norm Macdonald with Guest Mike Tyson",
+      "localFileName": "Norm Macdonald Live - S03E04 - Norm Macdonald with Guest Mike Tyson.mp4",
       "episodeOverall": 29
     },
     {
@@ -600,6 +659,8 @@
         "norm-macdonald-live",
         "Bobby Lee"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E05 - Norm Macdonald with Guest Bobby Lee",
+      "localFileName": "Norm Macdonald Live - S03E05 - Norm Macdonald with Guest Bobby Lee.mp4",
       "episodeOverall": 30
     },
     {
@@ -619,6 +680,8 @@
         "norm-macdonald-live",
         "Sarah Silverman (Part 1)"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E06 - Norm Macdonald with Guest Sarah Silverman (Pt 1)",
+      "localFileName": "Norm Macdonald Live - S03E06 - Norm Macdonald with Guest Sarah Silverman (Pt 1).mp4",
       "episodeOverall": 31
     },
     {
@@ -638,6 +701,8 @@
         "norm-macdonald-live",
         "Sarah Silverman (Part 2)"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E07 - Norm Macdonald with Guest Sarah Silverman (Pt 2)",
+      "localFileName": "Norm Macdonald Live - S03E07 - Norm Macdonald with Guest Sarah Silverman (Pt 2).mp4",
       "episodeOverall": 32
     },
     {
@@ -657,6 +722,8 @@
         "norm-macdonald-live",
         "Dana Carvey"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E08 - Norm Macdonald with Guest Dana Carvey",
+      "localFileName": "Norm Macdonald Live - S03E08 - Norm Macdonald with Guest Dana Carvey.mp4",
       "episodeOverall": 33
     },
     {
@@ -676,6 +743,8 @@
         "norm-macdonald-live",
         "Jerry Seinfeld"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E09 - Norm Macdonald with Guest Jerry Seinfeld",
+      "localFileName": "Norm Macdonald Live - S03E09 - Norm Macdonald with Guest Jerry Seinfeld.mp4",
       "episodeOverall": 34
     },
     {
@@ -695,6 +764,8 @@
         "norm-macdonald-live",
         "Caitlyn Jenner"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E10 - Norm Macdonald with Guest Caitlyn Jenner",
+      "localFileName": "Norm Macdonald Live - S03E10 - Norm Macdonald with Guest Caitlyn Jenner.mp4",
       "episodeOverall": 35
     },
     {
@@ -714,6 +785,8 @@
         "norm-macdonald-live",
         "Rich Little"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E11 - Norm Macdonald with Guest Rich Little",
+      "localFileName": "Norm Macdonald Live - S03E11 - Norm Macdonald with Guest Rich Little.mp4",
       "episodeOverall": 36
     },
     {
@@ -733,6 +806,8 @@
         "norm-macdonald-live",
         "Margaret Cho"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E12 - Norm Macdonald with Guest Margaret Cho",
+      "localFileName": "Norm Macdonald Live - S03E12 - Norm Macdonald with Guest Margaret Cho.mp4",
       "episodeOverall": 37
     },
     {
@@ -752,6 +827,8 @@
         "norm-macdonald-live",
         "Tim Allen"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E13 - Norm Macdonald with Guest Tim Allen",
+      "localFileName": "Norm Macdonald Live - S03E13 - Norm Macdonald with Guest Tim Allen.mp4",
       "episodeOverall": 38
     },
     {
@@ -771,6 +848,8 @@
         "norm-macdonald-live",
         "Jim Carrey"
       ],
+      "fileTitle": "Norm Macdonald Live - S03E14 - Norm Macdonald with Guest Jim Carrey",
+      "localFileName": "Norm Macdonald Live - S03E14 - Norm Macdonald with Guest Jim Carrey.mp4",
       "episodeOverall": 39
     }
   ]

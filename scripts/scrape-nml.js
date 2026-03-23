@@ -10,9 +10,12 @@ const OUTPUT_PATH = path.join(ROOT, 'data', 'norm-macdonald-live.json');
 
 const ARCHIVE_BASE = 'https://normmacdonaldarchive.com';
 const LIST_URL = `${ARCHIVE_BASE}/nml`;
+const WIKIPEDIA_WIKITEXT_URL = 'https://en.wikipedia.org/w/api.php?action=parse&page=Norm_Macdonald_Live&prop=wikitext&format=json';
 
 const LEGACY_ITUNES_ID = process.env.LEGACY_ITUNES_ID || '625135046';
 const LEGACY_ITUNES_PAGE_URL = process.env.LEGACY_ITUNES_PAGE_URL || `https://itunes.apple.com/us/podcast/norm-macdonald-live/id${LEGACY_ITUNES_ID}`;
+const IMDB_TITLE_ID = process.env.IMDB_TITLE_ID || 'tt6407712';
+const LOCAL_MEDIA_PATH = process.env.LOCAL_MEDIA_PATH || '/mnt/media-podcasts/Norm Macdonald Live';
 
 async function fetchText(url) {
   const response = await fetch(url, {
@@ -34,6 +37,171 @@ function unique(values) {
 
 function cleanText(value) {
   return (value || '').replace(/\s+/g, ' ').trim();
+}
+
+function pad2(value) {
+  return String(value).padStart(2, '0');
+}
+
+function episodeKey(season, episodeNumber) {
+  return `s${season}e${episodeNumber}`;
+}
+
+function normalizeGuestForFileTitle(guest) {
+  return cleanText(guest)
+    .replace(/\s+[\u2013-]\s+Part\s+/gi, ' (Pt ')
+    .replace(/\s+Part\s+(\d+)/gi, ' (Pt $1)')
+    .replace(/\(Pt\s*(\d+)\)?$/i, '(Pt $1)');
+}
+
+function buildDefaultFileTitle(season, episodeNumber, guest) {
+  return `Norm Macdonald Live - S${pad2(season)}E${pad2(episodeNumber)} - Norm Macdonald with Guest ${normalizeGuestForFileTitle(guest)}`;
+}
+
+function isVideoFilename(filename) {
+  return /\.(mp4|m4v|mov|mkv|avi|webm|ogv)$/i.test(filename);
+}
+
+function buildLocalFilenameMap(localMediaPath) {
+  const byEpisode = new Map();
+
+  if (!localMediaPath || !fs.existsSync(localMediaPath)) {
+    return byEpisode;
+  }
+
+  const files = fs.readdirSync(localMediaPath);
+  for (const file of files) {
+    if (!isVideoFilename(file)) continue;
+    const match = file.match(/S(\d{2})E(\d{2})/i);
+    if (!match) continue;
+
+    const season = Number(match[1]);
+    const episode = Number(match[2]);
+    const stem = path.parse(file).name;
+    byEpisode.set(episodeKey(season, episode), {
+      fileName: file,
+      fileTitle: stem
+    });
+  }
+
+  return byEpisode;
+}
+
+function stripWikiMarkup(value) {
+  return cleanText(
+    (value || '')
+      .replace(/\{\{[^{}]*\}\}/g, '')
+      .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2')
+      .replace(/\[\[([^\]]+)\]\]/g, '$1')
+      .replace(/<ref[^>]*>[\s\S]*?<\/ref>/g, '')
+      .replace(/''+/g, '')
+  );
+}
+
+function toIsoDate(dateText) {
+  const parsed = new Date(dateText);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed.toISOString().slice(0, 10);
+}
+
+function parseWikipediaEpisodes(wikitext) {
+  const seasonWordToNumber = {
+    one: 1,
+    two: 2,
+    three: 3
+  };
+
+  const byEpisode = new Map();
+  const sectionRegex = /===Season\s+(one|two|three)===([\s\S]*?)(?=\n===|$)/gi;
+  let sectionMatch = null;
+
+  while ((sectionMatch = sectionRegex.exec(wikitext)) !== null) {
+    const season = seasonWordToNumber[sectionMatch[1].toLowerCase()];
+    if (!season) continue;
+
+    const sectionBody = sectionMatch[2];
+    const rowRegex = /\|\s*(\d+)\s*\|\|\s*(\d+)\s*\|\|\s*([^|\n]+?)\s*\|\|\s*([^\n]+)/g;
+    let rowMatch = null;
+    while ((rowMatch = rowRegex.exec(sectionBody)) !== null) {
+      const inSeason = Number(rowMatch[2]);
+      const releaseDate = toIsoDate(stripWikiMarkup(rowMatch[3]));
+      const subject = stripWikiMarkup(rowMatch[4]);
+      if (!inSeason || !subject) continue;
+
+      byEpisode.set(episodeKey(season, inSeason), {
+        guest: subject,
+        releaseDate
+      });
+    }
+  }
+
+  return byEpisode;
+}
+
+function parseImdbEpisodesFromHtml(html) {
+  const $ = cheerio.load(html);
+  const byEpisode = new Map();
+
+  $('script[type="application/ld+json"]').each((_idx, element) => {
+    const raw = $(element).html();
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw);
+      const payloads = Array.isArray(parsed) ? parsed : [parsed];
+      payloads.forEach((payload) => {
+        const list = payload?.itemListElement;
+        if (!Array.isArray(list)) return;
+
+        list.forEach((item) => {
+          const episode = item?.item || item;
+          const seasonNumber = Number(episode?.partOfSeason?.seasonNumber);
+          const episodeNumber = Number(episode?.episodeNumber);
+          if (!seasonNumber || !episodeNumber) return;
+
+          byEpisode.set(episodeKey(seasonNumber, episodeNumber), {
+            title: cleanText(episode?.name || ''),
+            description: cleanText(episode?.description || ''),
+            releaseDate: toIsoDate(episode?.datePublished || '')
+          });
+        });
+      });
+    } catch {
+      // Ignore invalid json blocks.
+    }
+  });
+
+  return byEpisode;
+}
+
+async function fetchWikipediaEpisodeMap() {
+  const jsonText = await fetchText(WIKIPEDIA_WIKITEXT_URL).catch(() => null);
+  if (!jsonText) return new Map();
+
+  try {
+    const payload = JSON.parse(jsonText);
+    const wikitext = payload?.parse?.wikitext?.['*'] || '';
+    if (!wikitext) return new Map();
+    return parseWikipediaEpisodes(wikitext);
+  } catch {
+    return new Map();
+  }
+}
+
+async function fetchImdbEpisodeMap() {
+  const byEpisode = new Map();
+
+  for (const season of [1, 2, 3]) {
+    const url = `https://www.imdb.com/title/${IMDB_TITLE_ID}/episodes/?season=${season}`;
+    const html = await fetchText(url).catch(() => null);
+    if (!html) continue;
+
+    const seasonMap = parseImdbEpisodesFromHtml(html);
+    for (const [key, value] of seasonMap.entries()) {
+      byEpisode.set(key, value);
+    }
+  }
+
+  return byEpisode;
 }
 
 function extractEpisodeLinks(listHtml) {
@@ -112,6 +280,12 @@ async function main() {
   const listHtml = await fetchText(LIST_URL);
   const slugs = extractEpisodeLinks(listHtml);
 
+  const [wikipediaEpisodeMap, imdbEpisodeMap] = await Promise.all([
+    fetchWikipediaEpisodeMap(),
+    fetchImdbEpisodeMap()
+  ]);
+  const localFilenameMap = buildLocalFilenameMap(LOCAL_MEDIA_PATH);
+
   if (slugs.length !== 39) {
     throw new Error(`Expected 39 episodes, found ${slugs.length}`);
   }
@@ -127,6 +301,36 @@ async function main() {
 
     if (episode.thumbnail) {
       coverFallback = episode.thumbnail;
+    }
+
+    const key = episodeKey(episode.season, episode.episodeNumber);
+    const wikipediaMetadata = wikipediaEpisodeMap.get(key);
+    const imdbMetadata = imdbEpisodeMap.get(key);
+    const localFile = localFilenameMap.get(key);
+
+    if (wikipediaMetadata?.guest && !episode.guest) {
+      episode.guest = wikipediaMetadata.guest;
+      episode.title = wikipediaMetadata.guest;
+    }
+
+    if (wikipediaMetadata?.releaseDate && !episode.releaseDate) {
+      episode.releaseDate = wikipediaMetadata.releaseDate;
+    }
+
+    if (imdbMetadata?.description) {
+      const archiveDescription = cleanText(episode.description);
+      if (!archiveDescription || archiveDescription.length < 50) {
+        episode.description = imdbMetadata.description;
+      }
+    }
+
+    if ((!episode.description || episode.description.length < 20) && episode.guest) {
+      episode.description = `Norm Macdonald interviews ${episode.guest} in season ${episode.season}, episode ${episode.episodeNumber}.`;
+    }
+
+    episode.fileTitle = localFile?.fileTitle || buildDefaultFileTitle(episode.season, episode.episodeNumber, episode.guest);
+    if (localFile?.fileName) {
+      episode.localFileName = localFile.fileName;
     }
 
     episodes.push(episode);
@@ -160,7 +364,8 @@ async function main() {
     feedUrl: 'http://localhost:8042/rss/norm-macdonald-live.xml',
     source: {
       archiveList: LIST_URL,
-      wikipedia: 'https://en.wikipedia.org/wiki/Norm_Macdonald_Live'
+      wikipedia: 'https://en.wikipedia.org/wiki/Norm_Macdonald_Live',
+      imdbEpisodes: `https://www.imdb.com/title/${IMDB_TITLE_ID}/episodes/`
     }
   };
 
