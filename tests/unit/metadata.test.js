@@ -32,7 +32,9 @@ describe('metadata helpers', () => {
     const match = toAbsMatch(dataset);
     expect(match.title).toBe('Norm Macdonald Live');
     expect(match.feedUrl).toContain('/rss/norm-macdonald-live.xml');
+    expect(match.image).toContain('normmacdonaldarchive.com');
     expect(match.itunesId).toBeTruthy();
+    expect(match.mediaType).toBe('podcast');
     expect(match.episodes).toHaveLength(39);
   });
 
@@ -41,6 +43,8 @@ describe('metadata helpers', () => {
     const itemCount = (rss.match(/<item>/g) || []).length;
     expect(itemCount).toBe(39);
     expect(rss).toContain('<itunes:type>episodic</itunes:type>');
+    expect(rss).toContain('<image>');
+    expect(rss).toContain('<content:encoded><![CDATA[');
     expect(rss).toContain('<title>Norm Macdonald Live</title>');
   });
 });

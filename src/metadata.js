@@ -36,26 +36,41 @@ export function matchScore(query, haystackValues) {
 
 export function toAbsMatch(dataset) {
   const podcast = dataset.podcast;
+  const releaseDate = new Date(podcast.releaseDate);
+  const publishedYear = Number.isNaN(releaseDate.getTime()) ? undefined : String(releaseDate.getUTCFullYear());
+
+  const episodes = dataset.episodes.map((episode) => ({
+    ...episode,
+    subtitle: episode.guest || '',
+    summary: episode.description || '',
+    explicit: podcast.explicit,
+    image: episode.thumbnail || podcast.cover
+  }));
+
   return {
     title: podcast.title,
     subtitle: podcast.subtitle,
     author: podcast.author,
+    narrator: podcast.author,
     description: podcast.description,
     cover: podcast.cover,
+    image: podcast.cover,
     genres: podcast.genres,
     tags: podcast.tags,
     language: podcast.language,
     explicit: podcast.explicit,
     publisher: podcast.publisher,
-    publishedYear: String(new Date(podcast.releaseDate).getUTCFullYear()),
+    publishedYear,
     id: podcast.itunesId,
     itunesId: podcast.itunesId,
     itunesPageUrl: podcast.itunesPageUrl,
     feedUrl: podcast.feedUrl,
+    rssFeedUrl: podcast.feedUrl,
     releaseDate: podcast.releaseDate,
     type: podcast.type,
-    rssFeedUrl: podcast.feedUrl,
-    episodes: dataset.episodes,
+    mediaType: 'podcast',
+    numEpisodes: dataset.episodes.length,
+    episodes,
     source: podcast.source
   };
 }
@@ -72,12 +87,17 @@ export function buildRss(dataset) {
         '    <item>',
         `      <title>${escapeXml(episode.title)}</title>`,
         `      <description>${escapeXml(episode.description || '')}</description>`,
+        `      <content:encoded><![CDATA[${(episode.description || '').replaceAll(']]>', ']]]]><![CDATA[>')}]]></content:encoded>`,
         `      <pubDate>${escapeXml(toRfc2822(episode.releaseDate))}</pubDate>`,
         `      <guid isPermaLink="false">${escapeXml(guid)}</guid>`,
         `      <link>${escapeXml(episode.pageUrl)}</link>`,
         `      <enclosure url="${escapeXml(enclosureUrl)}" type="${escapeXml(enclosureType)}" length="0" />`,
+        `      <itunes:author>${escapeXml(podcast.author)}</itunes:author>`,
+        `      <itunes:summary>${escapeXml(episode.description || '')}</itunes:summary>`,
+        `      <itunes:subtitle>${escapeXml(episode.guest || '')}</itunes:subtitle>`,
         `      <itunes:episode>${episode.episodeNumber}</itunes:episode>`,
         `      <itunes:season>${episode.season}</itunes:season>`,
+        '      <itunes:episodeType>full</itunes:episodeType>',
         `      <itunes:explicit>${podcast.explicit ? 'yes' : 'no'}</itunes:explicit>`,
         `      <itunes:image href="${escapeXml(episode.thumbnail || podcast.cover)}" />`,
         '    </item>'
@@ -87,16 +107,24 @@ export function buildRss(dataset) {
 
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:content="http://purl.org/rss/1.0/modules/content/">',
+    '<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">',
     '  <channel>',
     `    <title>${escapeXml(podcast.title)}</title>`,
     `    <link>${escapeXml(podcast.itunesPageUrl)}</link>`,
+    `    <atom:link href="${escapeXml(podcast.feedUrl)}" rel="self" type="application/rss+xml" />`,
     `    <description>${escapeXml(podcast.description)}</description>`,
     `    <language>${escapeXml(podcast.language)}</language>`,
     `    <pubDate>${escapeXml(toRfc2822(podcast.releaseDate))}</pubDate>`,
     `    <lastBuildDate>${escapeXml(new Date().toUTCString())}</lastBuildDate>`,
+    '    <generator>abs-norm</generator>',
+    '    <image>',
+    `      <url>${escapeXml(podcast.cover)}</url>`,
+    `      <title>${escapeXml(podcast.title)}</title>`,
+    `      <link>${escapeXml(podcast.itunesPageUrl)}</link>`,
+    '    </image>',
     `    <itunes:author>${escapeXml(podcast.author)}</itunes:author>`,
     `    <itunes:summary>${escapeXml(podcast.description)}</itunes:summary>`,
+    `    <itunes:subtitle>${escapeXml(podcast.subtitle || '')}</itunes:subtitle>`,
     `    <itunes:explicit>${podcast.explicit ? 'yes' : 'no'}</itunes:explicit>`,
     `    <itunes:type>${escapeXml(podcast.type || 'episodic')}</itunes:type>`,
     `    <itunes:image href="${escapeXml(podcast.cover)}" />`,

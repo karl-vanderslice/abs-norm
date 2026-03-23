@@ -34,7 +34,19 @@ describe('HTTP integration', () => {
     expect(res.status).toBe(200);
     expect(res.body.matches).toHaveLength(1);
     expect(res.body.matches[0].title).toBe('Norm Macdonald Live');
+    expect(res.body.matches[0].feedUrl).toBe('http://localhost:8042/rss/norm-macdonald-live.xml');
     expect(res.body.matches[0].episodes).toHaveLength(39);
+  });
+
+  it('search supports title query parameter used by some metadata clients', async () => {
+    const app = buildTestApp();
+    const res = await request(app)
+      .get('/search')
+      .query({ mediaType: 'podcast', title: 'norm macdonald live' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.matches).toHaveLength(1);
+    expect(res.body.matches[0].title).toBe('Norm Macdonald Live');
   });
 
   it('search returns no matches for wrong media type', async () => {
@@ -70,6 +82,7 @@ describe('HTTP integration', () => {
     const parsed = parser.parse(res.text);
 
     expect(parsed.rss.channel.title).toBe('Norm Macdonald Live');
+    expect(parsed.rss.channel.image.url).toBe('https://normmacdonaldarchive.com/og-image.png');
     expect(parsed.rss.channel.item).toHaveLength(39);
   });
 
