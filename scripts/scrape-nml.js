@@ -12,6 +12,7 @@ const ARCHIVE_BASE = 'https://normmacdonaldarchive.com';
 const LIST_URL = `${ARCHIVE_BASE}/nml`;
 const ARCHIVE_DOWNLOAD_BASE = 'https://archive.org/download/Norm_Macdonald_Live';
 const WIKIPEDIA_WIKITEXT_URL = 'https://en.wikipedia.org/w/api.php?action=parse&page=Norm_Macdonald_Live&prop=wikitext&format=json';
+const COVER_IMAGE_URL = 'https://upload.wikimedia.org/wikipedia/en/2/22/Norm_Macdonald_Live.jpg';
 
 const LEGACY_ITUNES_ID = process.env.LEGACY_ITUNES_ID || '625135046';
 const LEGACY_ITUNES_PAGE_URL = process.env.LEGACY_ITUNES_PAGE_URL || `https://itunes.apple.com/us/podcast/norm-macdonald-live/id${LEGACY_ITUNES_ID}`;
@@ -311,10 +312,7 @@ function parseEpisodePage(slug, html, coverFallback) {
   const description = cleanText(aboutHeader.length ? aboutHeader.parent().find('p').first().text() : $('meta[name="description"]').attr('content'));
 
   const pageUrl = `${ARCHIVE_BASE}/nml/${slug}`;
-  const thumbnail =
-    $('meta[property="og:image"]').attr('content') ||
-    $('meta[name="twitter:image"]').attr('content') ||
-    coverFallback;
+  const thumbnail = coverFallback;
 
   return {
     slug,
@@ -349,17 +347,13 @@ async function main() {
   }
 
   const episodes = [];
-  let coverFallback = `${ARCHIVE_BASE}/og-image.png`;
+  const coverFallback = COVER_IMAGE_URL;
 
   for (const slug of slugs) {
     const url = `${ARCHIVE_BASE}/nml/${slug}`;
     console.log(`Scraping ${url}`);
     const html = await fetchText(url);
     const episode = parseEpisodePage(slug, html, coverFallback);
-
-    if (episode.thumbnail) {
-      coverFallback = episode.thumbnail;
-    }
 
     const key = episodeKey(episode.season, episode.episodeNumber);
     const wikipediaMetadata = wikipediaEpisodeMap.get(key);
@@ -419,7 +413,7 @@ async function main() {
     language: 'en',
     explicit: true,
     type: 'episodic',
-    cover: coverFallback,
+    cover: COVER_IMAGE_URL,
     itunesId: LEGACY_ITUNES_ID,
     itunesPageUrl: LEGACY_ITUNES_PAGE_URL,
     feedUrl: 'http://localhost:8042/rss/norm-macdonald-live.xml',

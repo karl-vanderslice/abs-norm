@@ -32,7 +32,7 @@ describe('metadata helpers', () => {
     const match = toAbsMatch(dataset);
     expect(match.title).toBe('Norm Macdonald Live');
     expect(match.feedUrl).toContain('/rss/norm-macdonald-live.xml');
-    expect(match.image).toContain('normmacdonaldarchive.com');
+    expect(match.image).toContain('upload.wikimedia.org');
     expect(match.itunesId).toBeTruthy();
     expect(match.mediaType).toBe('podcast');
     expect(match.episodes).toHaveLength(39);

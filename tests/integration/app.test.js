@@ -82,7 +82,7 @@ describe('HTTP integration', () => {
     const parsed = parser.parse(res.text);
 
     expect(parsed.rss.channel.title).toBe('Norm Macdonald Live');
-    expect(parsed.rss.channel.image.url).toBe('http://localhost:8042/assets/norm-macdonald-live.jpg');
+    expect(parsed.rss.channel.image.url).toBe('https://upload.wikimedia.org/wikipedia/en/2/22/Norm_Macdonald_Live.jpg');
     expect(parsed.rss.channel.item).toHaveLength(39);
   });
 

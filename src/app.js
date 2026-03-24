@@ -1,34 +1,20 @@
 import express from 'express';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { loadDatasetFromPath } from './dataset.js';
 import { buildRss, matchScore, normalize, toAbsMatch } from './metadata.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const STATIC_DIR = path.resolve(__dirname, '..', 'static');
-
 function withRuntimeFeedUrl(dataset, publicBaseUrl) {
   const feedUrl = `${publicBaseUrl}/rss/norm-macdonald-live.xml`;
-  const cover = `${publicBaseUrl}/assets/norm-macdonald-live.jpg`;
   return {
     ...dataset,
     podcast: {
       ...dataset.podcast,
-      feedUrl,
-      cover
-    },
-    episodes: dataset.episodes.map((episode) => ({
-      ...episode,
-      thumbnail: cover
-    }))
+      feedUrl
+    }
   };
 }
 
 export function createApp({ dataPath, publicBaseUrl }) {
   const app = express();
-
-  app.use('/assets', express.static(STATIC_DIR));
 
   app.get('/healthz', (_req, res) => {
     res.json({ ok: true });
