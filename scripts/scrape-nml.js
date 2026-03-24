@@ -412,7 +412,7 @@ async function main() {
     subtitle: 'The complete 39-episode run of Norm Macdonald Live',
     author: 'Norm Macdonald',
     publisher: 'Video Podcast Network / JASH',
-    description: 'Discontinued audio/video comedy talk podcast hosted by Norm Macdonald with co-host Adam Eget. Metadata sourced from the Norm Macdonald Archive and Wikipedia episode chronology.',
+    description: 'Norm Macdonald and Adam Eget welcome comedians, actors, and friends for long-form conversations.',
     genres: ['Comedy', 'Talk Show', 'Interview'],
     tags: ['norm-macdonald', 'norm-macdonald-live', 'comedy', 'interview', 'archive'],
     releaseDate: episodes[0].releaseDate,
